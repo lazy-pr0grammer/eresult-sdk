@@ -2,7 +2,6 @@ package com.eresult.sdk;
 
 import android.util.Log;
 
-import com.eresult.sdk.data.Result;
 import com.eresult.sdk.data.type.ResultType;
 import com.eresult.sdk.query.http.LazyHttp;
 
@@ -12,20 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 
 import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
 /**
  * Created by Anindya Das on 1/17/24 6:30 AM
  **/
 public class EResult {
-    private ResultType resultType;
     private String registrationId;
     private String studentRollNumber;
+    private final LazyHttp lazyHttp;
+    private final ResultType resultType;
 
-    private LazyHttp lazyHttp;
 
     private EResult(ResultType resultType) {
         this.resultType = resultType;
@@ -74,7 +70,7 @@ public class EResult {
 
     }
 
-    public static interface Callback<T, V> {
+    public interface Callback<T, V> {
         void onReceived(T result);
 
         void onQueryFailed(V error);
