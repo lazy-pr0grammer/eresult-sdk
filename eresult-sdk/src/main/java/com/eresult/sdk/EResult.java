@@ -2,6 +2,8 @@ package com.eresult.sdk;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.eresult.sdk.data.type.ResultType;
@@ -12,7 +14,10 @@ import com.eresult.sdk.query.http.LazyHttp;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -58,13 +63,12 @@ public class EResult {
     }
 
     public void requestCaptcha(CaptchaCallback callback) {
-        lazyHttp.queryAsync(new CaptchaFactory(), String.class, new LazyHttp.Callback<String>() {
+        lazyHttp.queryAsync(new CaptchaFactory(), byte[].class, new LazyHttp.Callback<byte[]>() {
             @Override
-            public void onResponse(Call call, String response) {
+            public void onResponse(Call call, byte[] response) {
                 try {
-                    Log.d("captcha", response);
-                    byte[] imageBytes = response.getBytes();
-                    callback.decodedBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
+                    new LExecutor().execute(() ->
+                            callback.decodedBitmap(BitmapFactory.decodeByteArray(response, 0, response.length)));
                 } catch (Exception e) {
                     callback.decodingFailure(e.getMessage());
                 }
@@ -94,9 +98,18 @@ public class EResult {
 
     }
 
-    public static interface CaptchaCallback {
+    public interface CaptchaCallback {
         void decodedBitmap(Bitmap bitmap);
 
         void decodingFailure(String message);
+    }
+
+    private static class LExecutor implements Executor {
+        private final Handler handler = new Handler(Looper.getMainLooper());
+
+        @Override
+        public void execute(Runnable command) {
+            handler.post(command);
+        }
     }
 }

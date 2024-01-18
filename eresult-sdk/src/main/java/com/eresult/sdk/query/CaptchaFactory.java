@@ -14,24 +14,26 @@ import okhttp3.Response;
 /**
  * Created by Anindya Das on 1/17/24 11:45 PM
  **/
-public class CaptchaFactory implements LazyHttp.CallFactory<String> {
+public class CaptchaFactory implements LazyHttp.CallFactory<byte[]> {
 
     private final String subPath;
 
     public CaptchaFactory() {
-        this.subPath = "/v2/captcha?t=" + System.currentTimeMillis();
+        this.subPath = "/v2/captcha";
     }
 
     @Override
     public Call createCall(OkHttpClient client, Request request) {
         return client.newCall(
                 request.newBuilder()
-                        .url(request.url().newBuilder().addEncodedPathSegments(subPath).build())
+                        .url(request.url().newBuilder().addPathSegments(subPath)
+                                .addQueryParameter("t", String.valueOf(System.currentTimeMillis()))
+                                .build().toString())
                         .build());
     }
 
     @Override
-    public void enqueueCall(Call call, LazyHttp.Callback<String> callback, Class<String> responseType) {
+    public void enqueueCall(Call call, LazyHttp.Callback<byte[]> callback, Class<byte[]> responseType) {
         call.enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -40,20 +42,19 @@ public class CaptchaFactory implements LazyHttp.CallFactory<String> {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String result = parseResponse(response, responseType);
-                callback.onResponse(call, result);
+                callback.onResponse(call, parseResponse(response, responseType));
             }
         });
     }
 
     @Override
-    public String parseResponse(Response response, Class<String> responseType) throws IOException {
-        if (responseType == String.class && response != null) {
+    public byte[] parseResponse(Response response, Class<byte[]> responseType) throws IOException {
+        if (responseType == byte[].class && response != null) {
             assert response.body() != null;
-            return response.body().string();
+            return response.body().bytes();
         } else {
             assert response != null;
-            return response.message();
+            return response.message().getBytes();
         }
     }
 }

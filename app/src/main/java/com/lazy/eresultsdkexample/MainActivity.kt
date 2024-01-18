@@ -1,10 +1,10 @@
 package com.lazy.eresultsdkexample
 
 import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.eresult.sdk.EResult
 import com.eresult.sdk.EResult.CaptchaCallback
 import com.eresult.sdk.data.type.ResultType
