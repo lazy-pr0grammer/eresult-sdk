@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
             .setResultType(ResultType.BOARD)
             .setBoardType(BoardType.CHITTAGONG)
             .setExamType(ExamType.SSC)
+            .setYear("2021")
             .setStudentRollNumber("100826")
             .setRegistrationId("1814794298")
             .build()
