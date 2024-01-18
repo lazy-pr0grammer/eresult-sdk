@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -45,7 +44,6 @@ public class LazyHttp {
         Request request = new Request.Builder().url(httpUrl).build();
         Call call = callFactory.createCall(client, request);
 
-
         try {
             Response response = call.execute();
             return callFactory.parseResponse(response, responseType);
@@ -55,39 +53,22 @@ public class LazyHttp {
 
     }
 
-    public <T> void queryAsync(@NotNull CallFactory<T> callFactory, Class<T> responseType, Callback callback) {
+    public <T> void queryAsync(@NotNull CallFactory<T> callFactory, Class<T> responseType, Callback<T> callback) {
         Request request = new Request.Builder().url(httpUrl).build();
-        Call call = callFactory.createCall(client, request);
+        callFactory.enqueueCall(callFactory.createCall(client, request), callback, responseType);
+    }
 
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                callback.onFailure(call, e);
-            }
+    public static interface Callback<T> {
+        void onResponse(Call call, T response);
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                T result = callFactory.parseResponse(response, responseType);
-                callback.onResponse(call, (Response) result);
-            }
-        });
+        void onFailure(Call call, IOException e);
     }
 
     public interface CallFactory<T> {
         Call createCall(OkHttpClient client, Request request);
 
+        void enqueueCall(Call call, Callback<T> callback, Class<T> responseType);
+
         T parseResponse(Response response, Class<T> responseType) throws IOException;
-    }
-
-    public static class MyCallFactory implements CallFactory<Response> {
-        @Override
-        public Call createCall(OkHttpClient client, Request request) {
-            return client.newCall(request);
-        }
-
-        @Override
-        public Response parseResponse(Response response, Class<Response> responseType) {
-            return response;
-        }
     }
 }

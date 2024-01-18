@@ -1,8 +1,12 @@
 package com.eresult.sdk;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.eresult.sdk.data.type.ResultType;
+import com.eresult.sdk.query.CaptchaFactory;
+import com.eresult.sdk.query.ConnectionFactory;
 import com.eresult.sdk.query.http.LazyHttp;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +30,7 @@ public class EResult {
     private EResult(ResultType resultType) {
         this.resultType = resultType;
         this.lazyHttp = new LazyHttp.Builder()
-                .baseUrl("https://eboardresults.com/en/ebr.app/home/")
+                .baseUrl("https://eboardresults.com")
                 .build();
     }
 
@@ -35,20 +39,40 @@ public class EResult {
         this.registrationId = registrationId;
         this.studentRollNumber = studentRollNumber;
         this.lazyHttp = new LazyHttp.Builder()
-                .baseUrl("https://eboardresults.com/en/ebr.app/home/")
+                .baseUrl("https://eboardresults.com")
                 .build();
     }
 
     public void query() {
-        lazyHttp.queryAsync(new LazyHttp.MyCallFactory(), Response.class, new okhttp3.Callback() {
+        lazyHttp.queryAsync(new ConnectionFactory<>(), String.class, new LazyHttp.Callback<String>() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
+            public void onResponse(Call call, String response) {
+                Log.d("EResult", response);
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                Log.d("EResult", Objects.requireNonNull(response.body()).string());
+            public void onFailure(Call call, IOException e) {
+                Log.d("EResult", Objects.requireNonNull(e.getMessage()));
+            }
+        });
+    }
+
+    public void requestCaptcha(CaptchaCallback callback) {
+        lazyHttp.queryAsync(new CaptchaFactory(), String.class, new LazyHttp.Callback<String>() {
+            @Override
+            public void onResponse(Call call, String response) {
+                try {
+                    Log.d("captcha", response);
+                    byte[] imageBytes = response.getBytes();
+                    callback.decodedBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
+                } catch (Exception e) {
+                    callback.decodingFailure(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.decodingFailure(e.getMessage());
             }
         });
     }
@@ -70,9 +94,9 @@ public class EResult {
 
     }
 
-    public interface Callback<T, V> {
-        void onReceived(T result);
+    public static interface CaptchaCallback {
+        void decodedBitmap(Bitmap bitmap);
 
-        void onQueryFailed(V error);
+        void decodingFailure(String message);
     }
 }
