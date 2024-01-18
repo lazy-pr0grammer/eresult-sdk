@@ -1,6 +1,6 @@
 package com.eresult.sdk.query.http;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 
@@ -18,7 +18,7 @@ public class LazyHttp {
     private final HttpUrl httpUrl;
     private final OkHttpClient client;
 
-    private LazyHttp(@NotNull Builder builder) {
+    private LazyHttp(@NonNull Builder builder) {
         this.client = builder.client;
         this.httpUrl = HttpUrl.parse(builder.baseUrl);
     }
@@ -40,7 +40,7 @@ public class LazyHttp {
         }
     }
 
-    public <T> T query(@NotNull CallFactory<T> callFactory, Class<T> responseType) {
+    public <T> T query(@NonNull CallFactory<T> callFactory, Class<T> responseType) {
         Request request = new Request.Builder().url(httpUrl).build();
         Call call = callFactory.createCall(client, request);
 
@@ -53,7 +53,7 @@ public class LazyHttp {
 
     }
 
-    public <T> void queryAsync(@NotNull CallFactory<T> callFactory, Class<T> responseType, Callback<T> callback) {
+    public <T> void queryAsync(@NonNull CallFactory<T> callFactory, Class<T> responseType, Callback<T> callback) {
         Request request = new Request.Builder().url(httpUrl).build();
         callFactory.enqueueCall(callFactory.createCall(client, request), callback, responseType);
     }

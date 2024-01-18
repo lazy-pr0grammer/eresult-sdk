@@ -1,8 +1,8 @@
 package com.eresult.sdk.query;
 
-import com.eresult.sdk.query.http.LazyHttp;
+import androidx.annotation.NonNull;
 
-import org.jetbrains.annotations.NotNull;
+import com.eresult.sdk.query.http.LazyHttp;
 
 import java.io.IOException;
 
@@ -17,17 +17,14 @@ import okhttp3.Response;
 public class CaptchaFactory implements LazyHttp.CallFactory<byte[]> {
 
     public String cookie;
-    public String accept;
-    public String acceptEncoding;
     private final String subPath;
-    private String acceptLanguage;
 
     public CaptchaFactory() {
         this.subPath = "/v2/captcha";
     }
 
     @Override
-    public Call createCall(@NotNull OkHttpClient client, @NotNull Request request) {
+    public Call createCall(@NonNull OkHttpClient client, @NonNull Request request) {
         return client.newCall(
                 request.newBuilder()
                         .url(request.url().newBuilder().addPathSegments(subPath)
@@ -37,22 +34,22 @@ public class CaptchaFactory implements LazyHttp.CallFactory<byte[]> {
     }
 
     @Override
-    public void enqueueCall(@NotNull Call call, @NotNull LazyHttp.Callback<byte[]> callback, @NotNull Class<byte[]> responseType) {
+    public void enqueueCall(@NonNull Call call, @NonNull LazyHttp.Callback<byte[]> callback, @NonNull Class<byte[]> responseType) {
         call.enqueue(new okhttp3.Callback() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(call, e);
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 callback.onResponse(call, parseResponse(response, responseType));
             }
         });
     }
 
     @Override
-    public byte[] parseResponse(@NotNull Response response, @NotNull Class<byte[]> responseType) throws IOException {
+    public byte[] parseResponse(@NonNull Response response, @NonNull Class<byte[]> responseType) throws IOException {
         cookie = response.headers().values("Set-Cookie").get(0);
         if (responseType == byte[].class) {
             assert response.body() != null;

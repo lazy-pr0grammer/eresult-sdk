@@ -6,31 +6,30 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.eresult.sdk.data.type.BoardType;
+import com.eresult.sdk.data.type.ExamType;
 import com.eresult.sdk.data.type.ResultType;
 import com.eresult.sdk.query.CaptchaFactory;
-import com.eresult.sdk.query.ConnectionFactory;
+import com.eresult.sdk.query.ResultRequestFactory;
 import com.eresult.sdk.query.http.LazyHttp;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by Anindya Das on 1/17/24 6:30 AM
  **/
 public class EResult {
+    private String year;
+    private ExamType examType;
+    private String mainCookie;
+    private BoardType boardType;
     private String registrationId;
-    private String studentRollNumber;
     private final LazyHttp lazyHttp;
+    private String studentRollNumber;
     private final ResultType resultType;
-
 
     private EResult(ResultType resultType) {
         this.resultType = resultType;
@@ -39,7 +38,9 @@ public class EResult {
                 .build();
     }
 
-    private EResult(ResultType resultType, String registrationId, String studentRollNumber) {
+    private EResult(ResultType resultType, String registrationId, String studentRollNumber, BoardType boardType, ExamType examType) {
+        this.examType = examType;
+        this.boardType = boardType;
         this.resultType = resultType;
         this.registrationId = registrationId;
         this.studentRollNumber = studentRollNumber;
@@ -48,64 +49,103 @@ public class EResult {
                 .build();
     }
 
-    public void query() {
-        ConnectionFactory<String> factory = new ConnectionFactory<>();
-        lazyHttp.queryAsync(factory, String.class, new LazyHttp.Callback<String>() {
-            @Override
-            public void onResponse(Call call, String response) {
-                Log.d("EResult", response);
-                Log.d("Cookie", factory.cookie);
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("EResult", Objects.requireNonNull(e.getMessage()));
-            }
-        });
-    }
-
-    public void requestCaptcha(CaptchaCallback callback) {
+    public void requestCaptcha(ResultCallback<Bitmap> callback) {
         CaptchaFactory factory = new CaptchaFactory();
         lazyHttp.queryAsync(factory, byte[].class, new LazyHttp.Callback<byte[]>() {
             @Override
             public void onResponse(Call call, byte[] response) {
                 try {
-                    Log.d("Cookie", factory.cookie);
+                    mainCookie = factory.cookie;
                     new LExecutor().execute(() ->
-                            callback.decodedBitmap(BitmapFactory.decodeByteArray(response, 0, response.length)));
+                            callback.onResponse(BitmapFactory.decodeByteArray(response, 0, response.length)));
                 } catch (Exception e) {
-                    callback.decodingFailure(e.getMessage());
+                    callback.onFailure(e.getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
-                callback.decodingFailure(e.getMessage());
+                callback.onFailure(e.getMessage());
+            }
+        });
+    }
+
+    public void requestResult(String captcha, ResultCallback<String> callback) {
+        lazyHttp.queryAsync(new ResultRequestFactory(captcha, mainCookie, studentRollNumber, registrationId, boardType, year, examType), String.class, new LazyHttp.Callback<String>() {
+            @Override
+            public void onResponse(Call call, String response) {
+                new LExecutor().execute(() -> callback.onResponse(response));
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onFailure(e.getMessage());
             }
         });
     }
 
     public static class Builder {
         private ResultType type;
+        private ExamType examType;
+        private BoardType boardType;
+        private String registrationId;
+        private String studentRollNumber;
 
         public Builder setResultType(ResultType type) {
             this.type = type;
             return this;
         }
 
+        public Builder setExamType(ExamType examType) {
+            this.examType = examType;
+            return this;
+        }
+
+        public Builder setBoardType(BoardType boardType) {
+            this.boardType = boardType;
+            return this;
+        }
+
+        public Builder setRegistrationId(String registrationId) {
+            this.registrationId = registrationId;
+            return this;
+        }
+
+        public Builder setStudentRollNumber(String studentRollNumber) {
+            this.studentRollNumber = studentRollNumber;
+            return this;
+        }
+
         public EResult build() {
             if (type == null) {
-                throw new NullPointerException("Result type needs to be specified");
+                throw new NullPointerException("Result type cannot be empty!");
             }
-            return new EResult(type);
+
+            if (examType == null) {
+                throw new NullPointerException("Exam type cannot be empty!");
+            }
+
+            if (boardType == null) {
+                throw new NullPointerException("Board type cannot be empty!");
+            }
+
+            if (registrationId == null) {
+                throw new NullPointerException("Registration id field cannot be empty!");
+            }
+
+            if (studentRollNumber == null) {
+                throw new NullPointerException("Roll number field cannot be empty!");
+            }
+
+            return new EResult(type, studentRollNumber, registrationId, boardType, examType);
         }
 
     }
 
-    public interface CaptchaCallback {
-        void decodedBitmap(Bitmap bitmap);
+    public interface ResultCallback<T> {
+        void onResponse(T result);
 
-        void decodingFailure(String message);
+        void onFailure(String result);
     }
 
     private static class LExecutor implements Executor {
