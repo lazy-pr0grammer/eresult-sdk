@@ -20,15 +20,17 @@ class MainActivity : AppCompatActivity() {
             .setResultType(ResultType.BOARD)
             .build()
 
-        result.requestCaptcha(object : CaptchaCallback {
-            override fun decodedBitmap(bitmap: Bitmap?) {
-                i1.setImageBitmap(bitmap)
-            }
+        result.query()
 
-            override fun decodingFailure(message: String?) {
-                Log.d(javaClass.simpleName, message!!)
-            }
-
-        })
+//        result.requestCaptcha(object : CaptchaCallback {
+//            override fun decodedBitmap(bitmap: Bitmap?) {
+//                i1.setImageBitmap(bitmap)
+//            }
+//
+//            override fun decodingFailure(message: String?) {
+//                Log.d(javaClass.simpleName, message!!)
+//            }
+//
+//        })
     }
 }

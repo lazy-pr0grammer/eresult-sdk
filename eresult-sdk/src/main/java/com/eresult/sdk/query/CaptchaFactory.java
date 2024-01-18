@@ -16,14 +16,18 @@ import okhttp3.Response;
  **/
 public class CaptchaFactory implements LazyHttp.CallFactory<byte[]> {
 
+    public String cookie;
+    public String accept;
+    public String acceptEncoding;
     private final String subPath;
+    private String acceptLanguage;
 
     public CaptchaFactory() {
         this.subPath = "/v2/captcha";
     }
 
     @Override
-    public Call createCall(OkHttpClient client, Request request) {
+    public Call createCall(@NotNull OkHttpClient client, @NotNull Request request) {
         return client.newCall(
                 request.newBuilder()
                         .url(request.url().newBuilder().addPathSegments(subPath)
@@ -33,7 +37,7 @@ public class CaptchaFactory implements LazyHttp.CallFactory<byte[]> {
     }
 
     @Override
-    public void enqueueCall(Call call, LazyHttp.Callback<byte[]> callback, Class<byte[]> responseType) {
+    public void enqueueCall(@NotNull Call call, @NotNull LazyHttp.Callback<byte[]> callback, @NotNull Class<byte[]> responseType) {
         call.enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -48,12 +52,12 @@ public class CaptchaFactory implements LazyHttp.CallFactory<byte[]> {
     }
 
     @Override
-    public byte[] parseResponse(Response response, Class<byte[]> responseType) throws IOException {
-        if (responseType == byte[].class && response != null) {
+    public byte[] parseResponse(@NotNull Response response, @NotNull Class<byte[]> responseType) throws IOException {
+        cookie = response.headers().values("Set-Cookie").get(0);
+        if (responseType == byte[].class) {
             assert response.body() != null;
             return response.body().bytes();
         } else {
-            assert response != null;
             return response.message().getBytes();
         }
     }

@@ -49,10 +49,12 @@ public class EResult {
     }
 
     public void query() {
-        lazyHttp.queryAsync(new ConnectionFactory<>(), String.class, new LazyHttp.Callback<String>() {
+        ConnectionFactory<String> factory = new ConnectionFactory<>();
+        lazyHttp.queryAsync(factory, String.class, new LazyHttp.Callback<String>() {
             @Override
             public void onResponse(Call call, String response) {
                 Log.d("EResult", response);
+                Log.d("Cookie", factory.cookie);
             }
 
             @Override
@@ -63,10 +65,12 @@ public class EResult {
     }
 
     public void requestCaptcha(CaptchaCallback callback) {
-        lazyHttp.queryAsync(new CaptchaFactory(), byte[].class, new LazyHttp.Callback<byte[]>() {
+        CaptchaFactory factory = new CaptchaFactory();
+        lazyHttp.queryAsync(factory, byte[].class, new LazyHttp.Callback<byte[]>() {
             @Override
             public void onResponse(Call call, byte[] response) {
                 try {
+                    Log.d("Cookie", factory.cookie);
                     new LExecutor().execute(() ->
                             callback.decodedBitmap(BitmapFactory.decodeByteArray(response, 0, response.length)));
                 } catch (Exception e) {

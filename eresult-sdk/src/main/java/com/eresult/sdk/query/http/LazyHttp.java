@@ -58,7 +58,7 @@ public class LazyHttp {
         callFactory.enqueueCall(callFactory.createCall(client, request), callback, responseType);
     }
 
-    public static interface Callback<T> {
+    public interface Callback<T> {
         void onResponse(Call call, T response);
 
         void onFailure(Call call, IOException e);
@@ -70,5 +70,19 @@ public class LazyHttp {
         void enqueueCall(Call call, Callback<T> callback, Class<T> responseType);
 
         T parseResponse(Response response, Class<T> responseType) throws IOException;
+    }
+
+    /**
+     * Under close inspection
+     * Please do not touch this class until you think you can make it better
+     */
+    public static class Result<T> {
+        public T response;
+        public String cookie;
+
+        public Result(T response, String cookie) {
+            this.cookie = cookie;
+            this.response = response;
+        }
     }
 }
