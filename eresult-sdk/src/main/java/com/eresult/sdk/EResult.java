@@ -28,6 +28,8 @@ import okhttp3.Call;
  * It utilizes LazyHttp for making asynchronous HTTP requests.
  */
 public class EResult {
+    private final LazyHttp lazyHttp;
+    private final ResultType resultType;
     private String year;
     private String eiinCode;
     private ExamType examType;
@@ -36,9 +38,7 @@ public class EResult {
     private BoardType boardType;
     private String districtCode;
     private String registrationId;
-    private final LazyHttp lazyHttp;
     private String studentRollNumber;
-    private final ResultType resultType;
 
     // Private constructor for creating an EResult instance with a specified ResultType.
     private EResult(ResultType resultType) {
@@ -120,6 +120,17 @@ public class EResult {
                         callback.onFailure(e.getMessage());
                     }
                 });
+    }
+
+    /**
+     * Callback interface for handling asynchronous responses or failures.
+     *
+     * @param <T> Type of the response data.
+     */
+    public interface ResultCallback<T> {
+        void onResponse(T result);
+
+        void onFailure(String result);
     }
 
     /**
@@ -217,17 +228,6 @@ public class EResult {
 
             return new EResult(year, type, registrationId, studentRollNumber, boardType, examType, eiinCode, centerCode, districtCode);
         }
-    }
-
-    /**
-     * Callback interface for handling asynchronous responses or failures.
-     *
-     * @param <T> Type of the response data.
-     */
-    public interface ResultCallback<T> {
-        void onResponse(T result);
-
-        void onFailure(String result);
     }
 
     /**
