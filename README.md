@@ -136,14 +136,14 @@ INSTITUTION //Provides institution based result (Requires EIIN)
 
 Also contains 3 exam type
 
-```
+```kotlin
 JSC, SSC, HSC
 ```
 
 It also has all boards. You can call it like this
 
 ```java
-BoardType type=BoardType.CHITTAGONG;
+BoardType type = BoardType.CHITTAGONG;
 ```
 
 ```kotlin
