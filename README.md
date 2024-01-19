@@ -37,8 +37,8 @@ Add the Jummania-Slider dependency to your app module's `build.gradle` file:
 
  ```gradle
 dependencies {
-    implementation("com.github.lazy-pr0grammer:eResultSdkExample:1.0") // For gradle.ktx
-    implementation'com.github.lazy-pr0grammer:eResultSdkExample:1.0' // For gradle.groovy
+    implementation("com.github.lazy-pr0grammer:eresult-sdk:1.0") // For gradle.ktx
+    implementation 'com.github.lazy-pr0grammer:eresult-sdk:1.0' // For gradle.groovy
 }
 ```
 
