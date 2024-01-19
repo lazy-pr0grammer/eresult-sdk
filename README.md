@@ -33,7 +33,7 @@ dependencyResolutionManagement {
 
 ## Step 2: Add the Dependency
 
-Add the Jummania-Slider dependency to your app module's `build.gradle` file:
+Add the eresult-sdk dependency to your app module's `build.gradle` file:
 
  ```gradle
 dependencies {
