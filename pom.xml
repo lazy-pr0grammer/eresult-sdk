@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.lazy-pr0grammer</groupId>
-    <artifactId>eResultSdkExample</artifactId>
+    <artifactId>eresult-sdk</artifactId>
     <version>latest</version>
     <packaging>aar</packaging>
 
