@@ -33,12 +33,12 @@ dependencyResolutionManagement {
 
 ## Step 2: Add the Dependency
 
-Add the EResult dependency to your app module's `build.gradle` file:
+Add the eresult-sdk dependency to your app module's `build.gradle` file:
 
  ```gradle
 dependencies {
-    implementation("com.github.lazy-pr0grammer:eResultSdkExample:1.0") // For gradle.ktx
-    implementation'com.github.lazy-pr0grammer:eResultSdkExample:1.0' // For gradle.groovy
+    implementation("com.github.lazy-pr0grammer:eresult-sdk:1.0") // For gradle.ktx
+    implementation 'com.github.lazy-pr0grammer:eresult-sdk:1.0' // For gradle.groovy
 }
 ```
 
