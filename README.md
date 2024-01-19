@@ -126,7 +126,7 @@ result.requestResult("captchaCode", object : ResultCallback<String> {
 
 The SDK contains 5 kinds of result type
 
-```
+```kotlin
 BOARD //Incomplete
 CENTER //Provides center based result
 DISTRICT //Provides district based result
