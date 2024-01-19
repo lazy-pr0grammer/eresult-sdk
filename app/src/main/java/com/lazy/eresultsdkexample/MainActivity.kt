@@ -10,9 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.eresult.sdk.EResult
 import com.eresult.sdk.EResult.ResultCallback
-import com.eresult.sdk.data.type.BoardType
-import com.eresult.sdk.data.type.ExamType
-import com.eresult.sdk.data.type.ResultType
+import com.eresult.sdk.data.BoardType
+import com.eresult.sdk.data.ExamType
+import com.eresult.sdk.data.ResultType
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity() {

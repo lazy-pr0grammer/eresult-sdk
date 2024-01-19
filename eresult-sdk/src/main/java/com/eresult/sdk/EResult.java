@@ -11,12 +11,12 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.eresult.sdk.data.type.BoardType;
-import com.eresult.sdk.data.type.ExamType;
-import com.eresult.sdk.data.type.ResultType;
-import com.eresult.sdk.query.CaptchaFactory;
-import com.eresult.sdk.query.ResultRequestFactory;
-import com.eresult.sdk.query.http.LazyHttp;
+import com.eresult.sdk.data.BoardType;
+import com.eresult.sdk.data.ExamType;
+import com.eresult.sdk.data.ResultType;
+import com.eresult.sdk.data.query.CaptchaFactory;
+import com.eresult.sdk.data.query.ResultRequestFactory;
+import com.eresult.sdk.data.query.http.LazyHttp;
 
 import java.io.IOException;
 import java.util.concurrent.Executor;

@@ -1,4 +1,4 @@
-package com.eresult.sdk.data.type;
+package com.eresult.sdk.data;
 
 /**
  * BoardType enum represents different types of educational boards in a region.

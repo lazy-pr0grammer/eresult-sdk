@@ -5,14 +5,14 @@
  * <p>
  * Created by Anindya Das on 1/18/24 11:39 AM.
  */
-package com.eresult.sdk.query;
+package com.eresult.sdk.data.query;
 
 import androidx.annotation.NonNull;
 
-import com.eresult.sdk.data.type.BoardType;
-import com.eresult.sdk.data.type.ExamType;
-import com.eresult.sdk.data.type.ResultType;
-import com.eresult.sdk.query.http.LazyHttp;
+import com.eresult.sdk.data.query.http.LazyHttp;
+import com.eresult.sdk.data.BoardType;
+import com.eresult.sdk.data.ExamType;
+import com.eresult.sdk.data.ResultType;
 
 import java.io.IOException;
 

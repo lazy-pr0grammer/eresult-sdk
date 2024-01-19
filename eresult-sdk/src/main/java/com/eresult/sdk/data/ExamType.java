@@ -1,4 +1,4 @@
-package com.eresult.sdk.data.type;
+package com.eresult.sdk.data;
 
 /**
  * ExamType enum represents different types of exams, such as SSC (Secondary School Certificate) and HSC (Higher Secondary Certificate).

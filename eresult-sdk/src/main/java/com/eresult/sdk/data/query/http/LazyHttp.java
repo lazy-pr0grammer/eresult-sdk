@@ -5,7 +5,7 @@
  * <p>
  * Created by Anindya Das on 1/17/24 11:20 AM.
  */
-package com.eresult.sdk.query.http;
+package com.eresult.sdk.data.query.http;
 
 import androidx.annotation.NonNull;
 

@@ -5,11 +5,11 @@
  * <p>
  * Created by Anindya Das on 1/17/24 11:45 PM.
  */
-package com.eresult.sdk.query;
+package com.eresult.sdk.data.query;
 
 import androidx.annotation.NonNull;
 
-import com.eresult.sdk.query.http.LazyHttp;
+import com.eresult.sdk.data.query.http.LazyHttp;
 
 import java.io.IOException;
 

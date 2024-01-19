@@ -1,4 +1,4 @@
-package com.eresult.sdk.data.type;
+package com.eresult.sdk.data;
 
 /**
  * ResultType enum represents different types of result inquiries that can be made through the eboardresults.com SDK.
