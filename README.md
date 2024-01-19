@@ -20,9 +20,26 @@ provides an overview of the SDK's classes, methods, and usage.
 To use the EResult SDK in your Android project, include the following dependency in your app's
 build.gradle file:
 
-```gradle
-implementation 'com.eresult:sdk:1.0.0' //Java
-implementation("com.eresult:sdk:1.0.0") //Kotlin
+Add the JitPack repository to your project's root `settings.gradle` file:
+
+```groovy
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven { url = uri("https://jitpack.io") } //Add this line
+    }
+}
+```
+
+## Step 2: Add the Dependency
+
+Add the Jummania-Slider dependency to your app module's `build.gradle` file:
+
+ ```gradle
+dependencies {
+    implementation("com.github.lazy-pr0grammer:eResultSdkExample:1.0") // For gradle.ktx
+    implementation'com.github.lazy-pr0grammer:eResultSdkExample:1.0' // For gradle.groovy
+}
 ```
 
 ## Getting Started
@@ -35,7 +52,7 @@ To create an instance of the **EResult** class, use the provided Builder:
 For Java:
 
 ```java
-EResult result=new EResult.Builder()
+EResult result = new EResult.Builder()
         .setYear("2023")
         .setResultType(ResultType.INDIVIDUAL)
         .setRegistrationId("123456")

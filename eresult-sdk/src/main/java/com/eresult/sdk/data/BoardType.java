@@ -16,5 +16,5 @@ public enum BoardType {
     RAJSHAHI,       // Rajshahi Education Board
     SYLHET,         // Sylhet Education Board
     MYMENSINGH,     // Mymensingh Education Board
-    TECHNICAL;      // Technical Education Board
+    TECHNICAL      // Technical Education Board
 }
