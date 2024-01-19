@@ -25,12 +25,12 @@ class MainActivity : AppCompatActivity() {
         val i1 = findViewById<ImageView>(R.id.i1)
 
         val result = EResult.Builder()
-            .setResultType(ResultType.BOARD)
+            .setYear("2023")
+            .setExamType(ExamType.HSC)
+            .setRegistrationId("reg_id")
+            .setStudentRollNumber("roll_num")
             .setBoardType(BoardType.CHITTAGONG)
-            .setExamType(ExamType.SSC)
-            .setYear("2021")
-            .setStudentRollNumber("100826")
-            .setRegistrationId("1814794298")
+            .setResultType(ResultType.INDIVIDUAL)
             .build()
 
         result.requestCaptcha(object : ResultCallback<Bitmap> {

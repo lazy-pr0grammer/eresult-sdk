@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.eresult.sdk.data.type.BoardType;
 import com.eresult.sdk.data.type.ExamType;
+import com.eresult.sdk.data.type.ResultType;
 import com.eresult.sdk.query.http.LazyHttp;
 
 import java.io.IOException;
@@ -22,11 +23,15 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class ResultRequestFactory implements LazyHttp.CallFactory<String> {
+    private String i = "0";
     private final String year;
     private final ExamType type;
     private final String subPath;
     private final String captcha;
+    private final String eiinCode;
+    private final String centerCode;
     private final String mainCookie;
+    private final String districtCode;
     private final BoardType boardType;
     private final String registrationId;
     private final String studentRollNumber;
@@ -41,6 +46,10 @@ public class ResultRequestFactory implements LazyHttp.CallFactory<String> {
      * @param boardType         Type of the educational board.
      * @param year              Exam year.
      * @param examType          Type of the exam.
+     * @param resultType        Type of result you want.
+     * @param centerCode        Your center code.
+     * @param districtCode      District code.
+     * @param eiinCode          EIIN code.
      */
     public ResultRequestFactory(
             String captcha,
@@ -49,15 +58,37 @@ public class ResultRequestFactory implements LazyHttp.CallFactory<String> {
             String registrationId,
             BoardType boardType,
             String year,
-            ExamType examType) {
+            ExamType examType,
+            @NonNull ResultType resultType,
+            String eiinCode,
+            String districtCode,
+            String centerCode) {
         this.year = year;
         this.type = examType;
         this.captcha = captcha;
+        this.eiinCode = eiinCode;
         this.boardType = boardType;
         this.subPath = "/v2/getres";
         this.mainCookie = mainCookie;
+        this.centerCode = centerCode;
+        this.districtCode = districtCode;
         this.registrationId = registrationId;
         this.studentRollNumber = studentRollNumber;
+
+        switch (resultType) {
+            case CENTER:
+                i = "3";
+                break;
+            case DISTRICT:
+                i = "4";
+                break;
+            case INDIVIDUAL:
+                i = "1";
+                break;
+            case INSTITUTION:
+                i = "2";
+                break;
+        }
     }
 
     /**
@@ -81,12 +112,12 @@ public class ResultRequestFactory implements LazyHttp.CallFactory<String> {
                                         .addQueryParameter("exam", type.name().toLowerCase())
                                         .addQueryParameter("year", year)
                                         .addQueryParameter("board", boardType.name().toLowerCase())
-                                        .addQueryParameter("result_type", "1")
+                                        .addQueryParameter("result_type", i)
                                         .addQueryParameter("roll", studentRollNumber)
                                         .addQueryParameter("reg", registrationId)
-                                        .addQueryParameter("eiin", "")
-                                        .addQueryParameter("dcode", "")
-                                        .addQueryParameter("ccode", "")
+                                        .addQueryParameter("eiin", eiinCode)
+                                        .addQueryParameter("dcode", districtCode)
+                                        .addQueryParameter("ccode", centerCode)
                                         .addQueryParameter("captcha", captcha)
                                         .build()
                                         .toString())
@@ -96,8 +127,8 @@ public class ResultRequestFactory implements LazyHttp.CallFactory<String> {
     /**
      * Enqueues the HTTP call for asynchronous execution and sets up callbacks for success or failure.
      *
-     * @param call       Call instance representing the HTTP request.
-     * @param callback   Callback to handle the response or failure.
+     * @param call         Call instance representing the HTTP request.
+     * @param callback     Callback to handle the response or failure.
      * @param responseType Class type of the expected response.
      */
     @Override

@@ -29,9 +29,12 @@ import okhttp3.Call;
  */
 public class EResult {
     private String year;
+    private String eiinCode;
     private ExamType examType;
     private String mainCookie;
+    private String centerCode;
     private BoardType boardType;
+    private String districtCode;
     private String registrationId;
     private final LazyHttp lazyHttp;
     private String studentRollNumber;
@@ -50,11 +53,14 @@ public class EResult {
             String registrationId,
             String studentRollNumber,
             BoardType boardType,
-            ExamType examType) {
+            ExamType examType, String eiinCode, String centerCode, String districtCode) {
         this.year = year;
+        this.eiinCode = eiinCode;
         this.examType = examType;
         this.boardType = boardType;
         this.resultType = resultType;
+        this.centerCode = centerCode;
+        this.districtCode = districtCode;
         this.registrationId = registrationId;
         this.studentRollNumber = studentRollNumber;
         this.lazyHttp = new LazyHttp.Builder().baseUrl("https://eboardresults.com").build();
@@ -95,13 +101,13 @@ public class EResult {
     /**
      * Requests exam results asynchronously using the provided captcha.
      *
-     * @param captcha   Captcha code for result retrieval.
-     * @param callback  Callback to handle the response or failure.
+     * @param captcha  Captcha code for result retrieval.
+     * @param callback Callback to handle the response or failure.
      */
     public void requestResult(String captcha, ResultCallback<String> callback) {
         lazyHttp.queryAsync(
                 new ResultRequestFactory(
-                        captcha, mainCookie, studentRollNumber, registrationId, boardType, year, examType),
+                        captcha, mainCookie, studentRollNumber, registrationId, boardType, year, examType, resultType, eiinCode, districtCode, centerCode),
                 String.class,
                 new LazyHttp.Callback<String>() {
                     @Override
@@ -121,8 +127,11 @@ public class EResult {
      */
     public static class Builder {
         private String year;
+        private String eiinCode;
         private ResultType type;
         private ExamType examType;
+        private String centerCode;
+        private String districtCode;
         private BoardType boardType;
         private String registrationId;
         private String studentRollNumber;
@@ -130,6 +139,21 @@ public class EResult {
         // Setter methods for Builder parameters.
         public Builder setYear(String year) {
             this.year = year;
+            return this;
+        }
+
+        public Builder setEiinCode(String eiinCode) {
+            this.eiinCode = eiinCode;
+            return this;
+        }
+
+        public Builder setCenterCode(String centerCode) {
+            this.centerCode = centerCode;
+            return this;
+        }
+
+        public Builder setDistrictCode(String districtCode) {
+            this.districtCode = districtCode;
             return this;
         }
 
@@ -164,12 +188,34 @@ public class EResult {
          * @return Fully initialized EResult instance.
          * @throws NullPointerException if any required parameter is not set.
          */
-        public EResult build() {
-            if (type == null || year == null || examType == null || boardType == null
-                    || registrationId == null || studentRollNumber == null) {
-                throw new NullPointerException("All parameters must be set!");
+        public EResult build() throws IllegalAccessException {
+            if (type == null)
+                throw new IllegalAccessException("You can not access results without setting its type!");
+
+            if (type == ResultType.BOARD)
+                throw new IllegalAccessException("Board based results is not available yet!");
+
+            if (type == ResultType.CENTER) {
+                if (year == null || centerCode == null || districtCode == null || examType == null || boardType == null)
+                    throw new NullPointerException("Needed parameters need to be set for a center based request!");
             }
-            return new EResult(year, type, registrationId, studentRollNumber, boardType, examType);
+
+            if (type == ResultType.DISTRICT) {
+                if (year == null || districtCode == null || examType == null || boardType == null)
+                    throw new NullPointerException("Needed parameters need to be set for district based request!");
+            }
+
+            if (type == ResultType.INSTITUTION) {
+                if (year == null || examType == null || boardType == null || eiinCode == null)
+                    throw new NullPointerException("All parameters need to be set for an institution based request!");
+            }
+
+            if (type == ResultType.INDIVIDUAL) {
+                if (year == null || studentRollNumber == null || registrationId == null || examType == null || boardType == null)
+                    throw new NullPointerException("All parameters need to be set for an individual request!");
+            }
+
+            return new EResult(year, type, registrationId, studentRollNumber, boardType, examType, eiinCode, centerCode, districtCode);
         }
     }
 

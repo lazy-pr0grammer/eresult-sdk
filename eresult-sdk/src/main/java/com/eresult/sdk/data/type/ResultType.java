@@ -10,5 +10,5 @@ public enum ResultType {
     CENTER,        // Result for a specific center
     DISTRICT,      // Result for a specific district
     INDIVIDUAL,    // Individual result
-    INSTITUTION;   // Result for an institution
+    INSTITUTION   // Result for an institution
 }
