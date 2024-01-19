@@ -39,7 +39,7 @@ afterEvaluate {
         publications {
             register<MavenPublication>("release") {
                 groupId = "com.github.lazy-pr0grammer"
-                artifactId = "eResultSdkExample"
+                artifactId = "eresult-sdk"
                 version = "1.0"
 
                 afterEvaluate {
