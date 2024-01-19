@@ -36,38 +36,6 @@ public class LazyHttp {
     }
 
     /**
-     * Builder class for constructing LazyHttp instances.
-     */
-    public static class Builder {
-        private String baseUrl;
-        private final OkHttpClient client = new OkHttpClient();
-
-        /**
-         * Sets the base URL for HTTP requests.
-         *
-         * @param baseUrl Base URL for HTTP requests.
-         * @return Builder instance.
-         */
-        public Builder baseUrl(String baseUrl) {
-            this.baseUrl = baseUrl;
-            return this;
-        }
-
-        /**
-         * Builds and returns a LazyHttp instance with the specified parameters.
-         *
-         * @return Fully initialized LazyHttp instance.
-         * @throws IllegalArgumentException if the base URL is not set.
-         */
-        public LazyHttp build() {
-            if (baseUrl == null || baseUrl.isEmpty()) {
-                throw new IllegalArgumentException("Base url must be set!");
-            }
-            return new LazyHttp(this);
-        }
-    }
-
-    /**
      * Makes a synchronous HTTP query using the provided CallFactory and response type.
      *
      * @param callFactory  CallFactory instance responsible for creating HTTP calls.
@@ -125,13 +93,45 @@ public class LazyHttp {
     }
 
     /**
+     * Builder class for constructing LazyHttp instances.
+     */
+    public static class Builder {
+        private final OkHttpClient client = new OkHttpClient();
+        private String baseUrl;
+
+        /**
+         * Sets the base URL for HTTP requests.
+         *
+         * @param baseUrl Base URL for HTTP requests.
+         * @return Builder instance.
+         */
+        public Builder baseUrl(String baseUrl) {
+            this.baseUrl = baseUrl;
+            return this;
+        }
+
+        /**
+         * Builds and returns a LazyHttp instance with the specified parameters.
+         *
+         * @return Fully initialized LazyHttp instance.
+         * @throws IllegalArgumentException if the base URL is not set.
+         */
+        public LazyHttp build() {
+            if (baseUrl == null || baseUrl.isEmpty()) {
+                throw new IllegalArgumentException("Base url must be set!");
+            }
+            return new LazyHttp(this);
+        }
+    }
+
+    /**
      * Result class represents the result of an HTTP query, containing the response and cookie information.
      *
      * @param <T> Type parameter representing the expected response type.
      */
     public static class Result<T> {
-        public T response;
-        public String cookie;
+        public final T response;
+        public final String cookie;
 
         /**
          * Constructor for Result class.
