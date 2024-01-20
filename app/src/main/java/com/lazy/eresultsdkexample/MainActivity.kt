@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
                 result.requestResult(e1.text.toString(), object : ResultCallback<String> {
                     override fun onResponse(result: String?) {
                         MaterialAlertDialogBuilder(this@MainActivity)
+                            .setTitle("Result")
                             .setMessage(result)
                             .create()
                             .show()

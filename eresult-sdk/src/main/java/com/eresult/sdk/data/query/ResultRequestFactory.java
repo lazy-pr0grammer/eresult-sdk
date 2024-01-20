@@ -9,10 +9,10 @@ package com.eresult.sdk.data.query;
 
 import androidx.annotation.NonNull;
 
-import com.eresult.sdk.data.query.http.LazyHttp;
 import com.eresult.sdk.data.BoardType;
 import com.eresult.sdk.data.ExamType;
 import com.eresult.sdk.data.ResultType;
+import com.eresult.sdk.data.query.http.LazyHttp;
 
 import java.io.IOException;
 
@@ -23,7 +23,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class ResultRequestFactory implements LazyHttp.CallFactory<String> {
-    private String i = "0";
+
+    private final String resultType;
     private final String year;
     private final ExamType type;
     private final String subPath;
@@ -74,21 +75,7 @@ public class ResultRequestFactory implements LazyHttp.CallFactory<String> {
         this.districtCode = districtCode;
         this.registrationId = registrationId;
         this.studentRollNumber = studentRollNumber;
-
-        switch (resultType) {
-            case CENTER:
-                i = "3";
-                break;
-            case DISTRICT:
-                i = "4";
-                break;
-            case INDIVIDUAL:
-                i = "1";
-                break;
-            case INSTITUTION:
-                i = "2";
-                break;
-        }
+        this.resultType = resultType.getResult();
     }
 
     /**
@@ -112,7 +99,7 @@ public class ResultRequestFactory implements LazyHttp.CallFactory<String> {
                                         .addQueryParameter("exam", type.name().toLowerCase())
                                         .addQueryParameter("year", year)
                                         .addQueryParameter("board", boardType.name().toLowerCase())
-                                        .addQueryParameter("result_type", i)
+                                        .addQueryParameter("result_type", resultType)
                                         .addQueryParameter("roll", studentRollNumber)
                                         .addQueryParameter("reg", registrationId)
                                         .addQueryParameter("eiin", eiinCode)
