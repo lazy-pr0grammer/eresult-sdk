@@ -52,7 +52,7 @@ To create an instance of the **EResult** class, use the provided Builder:
 For Java:
 
 ```java
-EResult result = new EResult.Builder()
+EResult result=new EResult.Builder()
         .setYear("2023")
         .setResultType(ResultType.INDIVIDUAL)
         .setRegistrationId("123456")
@@ -160,7 +160,7 @@ JSC, SSC, HSC
 It also has all boards. You can call it like this
 
 ```java
-BoardType type = BoardType.CHITTAGONG;
+BoardType type=BoardType.CHITTAGONG;
 ```
 
 ```kotlin

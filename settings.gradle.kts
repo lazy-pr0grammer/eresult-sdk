@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "eResultSdkExample"
+rootProject.name = "eresult-sdk"
 include(":app")
 include(":eresult-sdk")
