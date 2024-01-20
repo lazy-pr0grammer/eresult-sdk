@@ -68,6 +68,14 @@ public class EResult {
         this.lazyHttp = new LazyHttp.Builder().baseUrl("https://eboardresults.com").build();
     }
 
+    private static void throwNullPointerException(Object... objects) {
+        for (Object s : objects) {
+            if (s == null) {
+                throw new NullPointerException("All parameters need to be set for an individual request!");
+            }
+        }
+    }
+
     /**
      * Requests a captcha image asynchronously.
      *
@@ -219,23 +227,19 @@ public class EResult {
                 throw new IllegalAccessException("Board based results is not available yet!");
 
             if (type == ResultType.CENTER) {
-                if (year == null || centerCode == null || districtCode == null || examType == null || boardType == null)
-                    throw new NullPointerException("Needed parameters need to be set for a center based request!");
+                throwNullPointerException(year, centerCode, districtCode, examType, boardType);
             }
 
             if (type == ResultType.DISTRICT) {
-                if (year == null || districtCode == null || examType == null || boardType == null)
-                    throw new NullPointerException("Needed parameters need to be set for district based request!");
+                throwNullPointerException(year, districtCode, examType, boardType);
             }
 
             if (type == ResultType.INSTITUTION) {
-                if (year == null || examType == null || boardType == null || eiinCode == null)
-                    throw new NullPointerException("All parameters need to be set for an institution based request!");
+                throwNullPointerException(year, examType, boardType, eiinCode);
             }
 
             if (type == ResultType.INDIVIDUAL) {
-                if (year == null || studentRollNumber == null || registrationId == null || examType == null || boardType == null)
-                    throw new NullPointerException("All parameters need to be set for an individual request!");
+                throwNullPointerException(year, studentRollNumber, registrationId, examType, boardType);
             }
 
             return new EResult(year, type, registrationId, studentRollNumber, boardType, examType, eiinCode, centerCode, districtCode);
