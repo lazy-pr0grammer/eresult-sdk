@@ -11,6 +11,8 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.NonNull;
+
 import com.eresult.sdk.data.BoardType;
 import com.eresult.sdk.data.ExamType;
 import com.eresult.sdk.data.ResultType;
@@ -148,47 +150,57 @@ public class EResult {
         private String studentRollNumber;
 
         // Setter methods for Builder parameters.
-        public Builder setYear(String year) {
+
+        @NonNull
+        public Builder setYear(@NonNull String year) {
             this.year = year;
             return this;
         }
 
-        public Builder setEiinCode(String eiinCode) {
+        @NonNull
+        public Builder setEiinCode(@NonNull String eiinCode) {
             this.eiinCode = eiinCode;
             return this;
         }
 
-        public Builder setCenterCode(String centerCode) {
+        @NonNull
+        public Builder setCenterCode(@NonNull String centerCode) {
             this.centerCode = centerCode;
             return this;
         }
 
-        public Builder setDistrictCode(String districtCode) {
+        @NonNull
+        public Builder setDistrictCode(@NonNull String districtCode) {
             this.districtCode = districtCode;
             return this;
         }
 
-        public Builder setResultType(ResultType type) {
+        @NonNull
+        public Builder setResultType(@NonNull ResultType type) {
             this.type = type;
             return this;
         }
 
-        public Builder setExamType(ExamType examType) {
+        @NonNull
+        public Builder setExamType(@NonNull ExamType examType) {
             this.examType = examType;
             return this;
         }
 
-        public Builder setBoardType(BoardType boardType) {
+        @NonNull
+        public Builder setBoardType(@NonNull BoardType boardType) {
             this.boardType = boardType;
             return this;
         }
 
-        public Builder setRegistrationId(String registrationId) {
+        @NonNull
+        public Builder setRegistrationId(@NonNull String registrationId) {
             this.registrationId = registrationId;
             return this;
         }
 
-        public Builder setStudentRollNumber(String studentRollNumber) {
+        @NonNull
+        public Builder setStudentRollNumber(@NonNull String studentRollNumber) {
             this.studentRollNumber = studentRollNumber;
             return this;
         }
