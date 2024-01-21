@@ -1,6 +1,5 @@
 package com.lazy.eresultsdkexample
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.widget.Button
@@ -62,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun Context.toast(string: String) {
+    private fun toast(string: String) {
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
     }
 }
