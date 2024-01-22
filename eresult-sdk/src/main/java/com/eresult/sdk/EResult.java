@@ -49,6 +49,20 @@ public class EResult {
     }
 
     // Private constructor for creating a fully initialized EResult instance.
+
+    /**
+     * Constructs an instance of EResult with the specified parameters.
+     *
+     * @param year              The academic year for the result.
+     * @param resultType        The type of result (e.g., CENTER, DISTRICT, INSTITUTION, INDIVIDUAL).
+     * @param registrationId    The registration ID for the result.
+     * @param studentRollNumber The roll number of the student for individual results.
+     * @param boardType         The type of educational board (e.g., Dhaka, Chittagong, etc.).
+     * @param examType          The type of examination (e.g., SSC, HSC).
+     * @param eiinCode          The Educational Institution Identification Number (EIIN) code for institution results.
+     * @param centerCode        The examination center code for center results.
+     * @param districtCode      The district code for district results.
+     */
     private EResult(
             String year,
             ResultType resultType,
@@ -68,13 +82,20 @@ public class EResult {
         this.lazyHttp = new LazyHttp.Builder().baseUrl("https://eboardresults.com").build();
     }
 
+    /**
+     * Throws a NullPointerException if any of the provided objects is null.
+     *
+     * @param objects The objects to check for null values.
+     * @throws NullPointerException If any of the provided objects is null.
+     */
     private static void throwNullPointerException(Object... objects) {
-        for (Object s : objects) {
-            if (s == null) {
+        for (Object obj : objects) {
+            if (obj == null) {
                 throw new NullPointerException("All parameters need to be set for an individual request!");
             }
         }
     }
+
 
     /**
      * Requests a captcha image asynchronously.
@@ -159,65 +180,121 @@ public class EResult {
 
         // Setter methods for Builder parameters.
 
+        /**
+         * Sets the academic year for the result.
+         *
+         * @param year The academic year to set.
+         * @return The Builder instance for method chaining.
+         */
         @NonNull
         public Builder setYear(@NonNull String year) {
             this.year = year;
             return this;
         }
 
+        /**
+         * Sets the Educational Institution Identification Number (EIIN) code.
+         *
+         * @param eiinCode The EIIN code to set.
+         * @return The Builder instance for method chaining.
+         */
         @NonNull
         public Builder setEiinCode(@NonNull String eiinCode) {
             this.eiinCode = eiinCode;
             return this;
         }
 
+        /**
+         * Sets the examination center code.
+         *
+         * @param centerCode The center code to set.
+         * @return The Builder instance for method chaining.
+         */
         @NonNull
         public Builder setCenterCode(@NonNull String centerCode) {
             this.centerCode = centerCode;
             return this;
         }
 
+        /**
+         * Sets the district code for the result.
+         *
+         * @param districtCode The district code to set.
+         * @return The Builder instance for method chaining.
+         */
         @NonNull
         public Builder setDistrictCode(@NonNull String districtCode) {
             this.districtCode = districtCode;
             return this;
         }
 
+        /**
+         * Sets the result type for the result.
+         *
+         * @param type The result type to set.
+         * @return The Builder instance for method chaining.
+         */
         @NonNull
         public Builder setResultType(@NonNull ResultType type) {
             this.type = type;
             return this;
         }
 
+        /**
+         * Sets the exam type for the result.
+         *
+         * @param examType The exam type to set.
+         * @return The Builder instance for method chaining.
+         */
         @NonNull
         public Builder setExamType(@NonNull ExamType examType) {
             this.examType = examType;
             return this;
         }
 
+        /**
+         * Sets the board type for the result.
+         *
+         * @param boardType The board type to set.
+         * @return The Builder instance for method chaining.
+         */
         @NonNull
         public Builder setBoardType(@NonNull BoardType boardType) {
             this.boardType = boardType;
             return this;
         }
 
+
+        /**
+         * Sets the registration ID for the result.
+         *
+         * @param registrationId The registration ID to set.
+         * @return The Builder instance for method chaining.
+         */
         @NonNull
         public Builder setRegistrationId(@NonNull String registrationId) {
             this.registrationId = registrationId;
             return this;
         }
 
+        /**
+         * Sets the student roll number for the result.
+         *
+         * @param studentRollNumber The student roll number to set.
+         * @return The Builder instance for method chaining.
+         */
         @NonNull
         public Builder setStudentRollNumber(@NonNull String studentRollNumber) {
             this.studentRollNumber = studentRollNumber;
             return this;
         }
 
+
         /**
          * Builds and returns an EResult instance with the specified parameters.
          *
          * @return Fully initialized EResult instance.
-         * @throws NullPointerException if any required parameter is not set.
+         * @throws NullPointerException or NullPointerException if any required parameter is not set or null.
          */
         public EResult build() throws IllegalAccessException {
             if (type == null)
