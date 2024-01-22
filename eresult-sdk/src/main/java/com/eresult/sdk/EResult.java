@@ -294,7 +294,7 @@ public class EResult {
          * Builds and returns an EResult instance with the specified parameters.
          *
          * @return Fully initialized EResult instance.
-         * @throws NullPointerException or NullPointerException if any required parameter is not set or null.
+         * @throws NullPointerException or NullPointerException if any required parameter is null or Illegal.
          */
         public EResult build() throws IllegalAccessException {
             if (type == null)
