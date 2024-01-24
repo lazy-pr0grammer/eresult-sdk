@@ -11,6 +11,8 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.NonNull;
+
 import com.eresult.sdk.data.BoardType;
 import com.eresult.sdk.data.ExamType;
 import com.eresult.sdk.data.ResultType;
@@ -47,6 +49,20 @@ public class EResult {
     }
 
     // Private constructor for creating a fully initialized EResult instance.
+
+    /**
+     * Constructs an instance of EResult with the specified parameters.
+     *
+     * @param year              The academic year for the result.
+     * @param resultType        The type of result (e.g., CENTER, DISTRICT, INSTITUTION, INDIVIDUAL).
+     * @param registrationId    The registration ID for the result.
+     * @param studentRollNumber The roll number of the student for individual results.
+     * @param boardType         The type of educational board (e.g., Dhaka, Chittagong, etc.).
+     * @param examType          The type of examination (e.g., SSC, HSC).
+     * @param eiinCode          The Educational Institution Identification Number (EIIN) code for institution results.
+     * @param centerCode        The examination center code for center results.
+     * @param districtCode      The district code for district results.
+     */
     private EResult(
             String year,
             ResultType resultType,
@@ -65,6 +81,21 @@ public class EResult {
         this.studentRollNumber = studentRollNumber;
         this.lazyHttp = new LazyHttp.Builder().baseUrl("https://eboardresults.com").build();
     }
+
+    /**
+     * Throws a NullPointerException if any of the provided objects is null.
+     *
+     * @param objects The objects to check for null values.
+     * @throws NullPointerException If any of the provided objects is null.
+     */
+    private static void throwNullPointerException(Object... objects) {
+        for (Object obj : objects) {
+            if (obj == null) {
+                throw new NullPointerException("All parameters need to be set for an individual request!");
+            }
+        }
+    }
+
 
     /**
      * Requests a captcha image asynchronously.
@@ -148,56 +179,122 @@ public class EResult {
         private String studentRollNumber;
 
         // Setter methods for Builder parameters.
-        public Builder setYear(String year) {
+
+        /**
+         * Sets the academic year for the result.
+         *
+         * @param year The academic year to set.
+         * @return The Builder instance for method chaining.
+         */
+        @NonNull
+        public Builder setYear(@NonNull String year) {
             this.year = year;
             return this;
         }
 
-        public Builder setEiinCode(String eiinCode) {
+        /**
+         * Sets the Educational Institution Identification Number (EIIN) code.
+         *
+         * @param eiinCode The EIIN code to set.
+         * @return The Builder instance for method chaining.
+         */
+        @NonNull
+        public Builder setEiinCode(@NonNull String eiinCode) {
             this.eiinCode = eiinCode;
             return this;
         }
 
-        public Builder setCenterCode(String centerCode) {
+        /**
+         * Sets the examination center code.
+         *
+         * @param centerCode The center code to set.
+         * @return The Builder instance for method chaining.
+         */
+        @NonNull
+        public Builder setCenterCode(@NonNull String centerCode) {
             this.centerCode = centerCode;
             return this;
         }
 
-        public Builder setDistrictCode(String districtCode) {
+        /**
+         * Sets the district code for the result.
+         *
+         * @param districtCode The district code to set.
+         * @return The Builder instance for method chaining.
+         */
+        @NonNull
+        public Builder setDistrictCode(@NonNull String districtCode) {
             this.districtCode = districtCode;
             return this;
         }
 
-        public Builder setResultType(ResultType type) {
+        /**
+         * Sets the result type for the result.
+         *
+         * @param type The result type to set.
+         * @return The Builder instance for method chaining.
+         */
+        @NonNull
+        public Builder setResultType(@NonNull ResultType type) {
             this.type = type;
             return this;
         }
 
-        public Builder setExamType(ExamType examType) {
+        /**
+         * Sets the exam type for the result.
+         *
+         * @param examType The exam type to set.
+         * @return The Builder instance for method chaining.
+         */
+        @NonNull
+        public Builder setExamType(@NonNull ExamType examType) {
             this.examType = examType;
             return this;
         }
 
-        public Builder setBoardType(BoardType boardType) {
+        /**
+         * Sets the board type for the result.
+         *
+         * @param boardType The board type to set.
+         * @return The Builder instance for method chaining.
+         */
+        @NonNull
+        public Builder setBoardType(@NonNull BoardType boardType) {
             this.boardType = boardType;
             return this;
         }
 
-        public Builder setRegistrationId(String registrationId) {
+
+        /**
+         * Sets the registration ID for the result.
+         *
+         * @param registrationId The registration ID to set.
+         * @return The Builder instance for method chaining.
+         */
+        @NonNull
+        public Builder setRegistrationId(@NonNull String registrationId) {
             this.registrationId = registrationId;
             return this;
         }
 
-        public Builder setStudentRollNumber(String studentRollNumber) {
+        /**
+         * Sets the student roll number for the result.
+         *
+         * @param studentRollNumber The student roll number to set.
+         * @return The Builder instance for method chaining.
+         */
+        @NonNull
+        public Builder setStudentRollNumber(@NonNull String studentRollNumber) {
             this.studentRollNumber = studentRollNumber;
             return this;
         }
+
 
         /**
          * Builds and returns an EResult instance with the specified parameters.
          *
          * @return Fully initialized EResult instance.
-         * @throws NullPointerException if any required parameter is not set.
+         * @throws NullPointerException or NullPointerException if any required parameter is null or Illegal.
          */
         public EResult build() throws IllegalAccessException {
             if (type == null)
@@ -207,23 +304,19 @@ public class EResult {
                 throw new IllegalAccessException("Board based results is not available yet!");
 
             if (type == ResultType.CENTER) {
-                if (year == null || centerCode == null || districtCode == null || examType == null || boardType == null)
-                    throw new NullPointerException("Needed parameters need to be set for a center based request!");
+                throwNullPointerException(year, centerCode, districtCode, examType, boardType);
             }
 
             if (type == ResultType.DISTRICT) {
-                if (year == null || districtCode == null || examType == null || boardType == null)
-                    throw new NullPointerException("Needed parameters need to be set for district based request!");
+                throwNullPointerException(year, districtCode, examType, boardType);
             }
 
             if (type == ResultType.INSTITUTION) {
-                if (year == null || examType == null || boardType == null || eiinCode == null)
-                    throw new NullPointerException("All parameters need to be set for an institution based request!");
+                throwNullPointerException(year, examType, boardType, eiinCode);
             }
 
             if (type == ResultType.INDIVIDUAL) {
-                if (year == null || studentRollNumber == null || registrationId == null || examType == null || boardType == null)
-                    throw new NullPointerException("All parameters need to be set for an individual request!");
+                throwNullPointerException(year, studentRollNumber, registrationId, examType, boardType);
             }
 
             return new EResult(year, type, registrationId, studentRollNumber, boardType, examType, eiinCode, centerCode, districtCode);
